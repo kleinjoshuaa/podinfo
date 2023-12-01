@@ -20,7 +20,7 @@ spec:
       requeueAfterSeconds: 30
   template:
     metadata:
-      name: 'podinfo-<+codebase.branch>-<+trigger.prNumber>'
+      name: 'podinfo-commitShaGoesHere'
       namespace: argocd
     spec:
       source:
@@ -30,7 +30,7 @@ spec:
       project: "17fb7e57"
       destination:
         server: https://kubernetes.default.svc
-        namespace: 'podinfo-<+codebase.branch>-<+trigger.prNumber>'
+        namespace: 'podinfo-commitShaGoesHere'
       syncPolicy:
          syncOptions:
           - CreateNamespace=true
