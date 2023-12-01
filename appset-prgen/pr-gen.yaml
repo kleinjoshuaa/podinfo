@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: podinfo-review
+  namespace: argocd
+spec:
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: dewandemo
+        # The Github repository
+        repo: podinfo
+        # Labels is used to filter the PRs that you want to target. (optional)
+        labels:
+        - preview
+      requeueAfterSeconds: 30
+  template:
+    metadata:
+      name: 'podinfo-<+codebase.branch>-<+trigger.prNumber>'
+      namespace: argocd
+    spec:
+      source:
+        repoURL: 'https://github.com/dewandemo/podinfo.git'
+        targetRevision: '{{head_sha}}'
+        path: charts/podinfo
+      project: "default"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'podinfo-<+codebase.branch>-<+trigger.prNumber>'
+      syncPolicy:
+         syncOptions:
+          - CreateNamespace=true
