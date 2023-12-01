@@ -8,7 +8,7 @@ backends: []
 
 image:
   repository: ghcr.io/stefanprodan/podinfo
-  tag: bd8ac064c3bb460ea4c27254511e035ab45de67f
+  tag: ae28cad115834397d6fc107be21cfe58216e1fa7
   pullPolicy: IfNotPresent
 
 ui:
@@ -87,7 +87,7 @@ cache: ""
 redis:
   enabled: false
   repository: redis
-  tag: bd8ac064c3bb460ea4c27254511e035ab45de67f
+  tag: ae28cad115834397d6fc107be21cfe58216e1fa7
 
 serviceAccount:
   # Specifies whether a service account should be created
