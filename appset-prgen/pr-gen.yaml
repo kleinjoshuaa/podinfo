@@ -24,7 +24,7 @@ spec:
         repoURL: 'https://github.com/dewandemo/podinfo.git'
         targetRevision: '{{head_sha}}'
         path: charts/podinfo
-      project: "default"
+      project: "17fb7e57"
       destination:
         server: https://kubernetes.default.svc
         namespace: 'podinfo-<+codebase.branch>-<+trigger.prNumber>'
