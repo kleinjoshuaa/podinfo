@@ -8,7 +8,7 @@ backends: []
 
 image:
   repository: dewandemo/podinfo
-  tag: 8701ac661f9685779c2dbca1fa94faf57e9b5752
+  tag: cc41f26197249153820b3971fbb5f21f6d3e3c3b
   pullPolicy: IfNotPresent
 
 ui:
@@ -87,7 +87,7 @@ cache: ""
 redis:
   enabled: false
   repository: redis
-  tag: 8701ac661f9685779c2dbca1fa94faf57e9b5752
+  tag: cc41f26197249153820b3971fbb5f21f6d3e3c3b
 
 serviceAccount:
   # Specifies whether a service account should be created
