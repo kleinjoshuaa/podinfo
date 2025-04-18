@@ -49,6 +49,8 @@ spec:
         env:
         - name: PODINFO_UI_COLOR
           value: "#34577c"
+        - name: PODINFO_SPLITIO_API_KEY
+          value: {{.Values.sdkKey}} 
         livenessProbe:
           exec:
             command:
