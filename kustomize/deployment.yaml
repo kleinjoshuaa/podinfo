@@ -47,6 +47,8 @@ spec:
         - --random-delay=false
         - --random-error=false
         env:
+        - name: PODINFO_SPLITIO_API_KEY
+          value: {{Values.apiKey}}
         - name: PODINFO_UI_COLOR
           value: "#34577c"
         livenessProbe:
