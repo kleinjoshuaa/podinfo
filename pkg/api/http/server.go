@@ -16,6 +16,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	_ "github.com/stefanprodan/podinfo/pkg/api/http/docs"
 	"github.com/stefanprodan/podinfo/pkg/fscache"
+	"github.com/splitio/go-client/v6/splitio/client"
+	"github.com/splitio/go-client/v6/splitio/conf"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"github.com/swaggo/swag"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
@@ -71,6 +73,7 @@ type Config struct {
 	Unready               bool          `mapstructure:"unready"`
 	JWTSecret             string        `mapstructure:"jwt-secret"`
 	CacheServer           string        `mapstructure:"cache-server"`
+	SplitIOAPIKey         string        `mapstructure:"splitio-api-key"`
 }
 
 type Server struct {
@@ -81,6 +84,8 @@ type Server struct {
 	handler        http.Handler
 	tracer         trace.Tracer
 	tracerProvider *sdktrace.TracerProvider
+	splitClient    interface{}
+	splitInitialized bool
 }
 
 func NewServer(config *Config, logger *zap.Logger) (*Server, error) {
@@ -88,6 +93,32 @@ func NewServer(config *Config, logger *zap.Logger) (*Server, error) {
 		router: mux.NewRouter(),
 		logger: logger,
 		config: config,
+		splitInitialized: false,
+	}
+
+	// Initialize Split.io client if API key is provided
+	if config.SplitIOAPIKey != "" {
+		// Create Split.io configuration
+		cfg := conf.Default()
+		
+		// Create a Split.io factory
+		factory, err := client.NewSplitFactory(config.SplitIOAPIKey, cfg)
+		if err != nil {
+			logger.Error("error initializing Split.io client", zap.Error(err))
+		} else {
+			// Get the Split.io client
+			splitClient := factory.Client()
+			srv.splitClient = splitClient
+			
+			// Wait until the client is ready or timeout
+			err = splitClient.BlockUntilReady(10)
+			if err != nil {
+				logger.Error("error getting Split.io client ready", zap.Error(err))
+			} else {
+				logger.Info("Split.io client initialized successfully")
+				srv.splitInitialized = true
+			}
+		}
 	}
 
 	return srv, nil
